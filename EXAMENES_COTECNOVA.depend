@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1487879831 source:f:\taller_clase2\main.c
+	<stdio.h>
+	<stdlib.h>
+
