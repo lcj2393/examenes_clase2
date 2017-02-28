@@ -5,12 +5,13 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-void menu(char *, int *);
+void menu(char *, int *,int*);
 void realizar_examen(char *, int *);
 int validacion(int *);
-void calificar_examen(int *);
-void repetir_examen(char *,int *);
+void calificar_examen(int *, int *);
+void repetir_examen(char *,int *, int *);
 void anular_examen();
 void salir();
 
@@ -20,14 +21,17 @@ int main()//FUNCION PRINCIPAL
     int estado = 0; //0 => verdadero y 1 => falso
     char *pnombre = nombre;
     int *pestado = &estado;
+    srand(time(NULL));
+    int prueba = rand() % 5;
+    int *pprueba = &prueba;
     printf("Bienvenido a Examenes Cotecnova \n");
     printf("Por favor ingrese su nombre para continuar \n");
     scanf("%s", nombre);
-    menu(pnombre, pestado);
+    menu(pnombre, pestado,pprueba);
     return 0;
 }
 
-void menu(char *pnombre, int *pestado)//FUNCION MENU
+void menu(char *pnombre, int *pestado,int *pprueba)//FUNCION MENU
 {
     int opcion;
     printf("nombre %s\n", pnombre);
@@ -51,10 +55,10 @@ void menu(char *pnombre, int *pestado)//FUNCION MENU
                 realizar_examen(pnombre, pestado);
             break;
         case 2: printf("2. Calificar Examen\n");
-                calificar_examen(pestado);
+                calificar_examen(pestado,pprueba);
             break;
         case 3: printf("3. Repetir Examen\n");
-                repetir_examen(pnombre,pestado);
+                repetir_examen(pnombre,pestado,pprueba);
             break;
         case 4:
                 anular_examen(pestado);
@@ -65,7 +69,7 @@ void menu(char *pnombre, int *pestado)//FUNCION MENU
         default: printf("Una opcion invalida, por favor intentelo de nuevo.\n");
     }getch();
 system("cls");
-menu(pnombre, pestado);
+menu(pnombre, pestado, pprueba);
 }
 
 void realizar_examen(char *pnombre, int *pestado)//FUNCION REALIZAR EXAMEN
@@ -87,13 +91,13 @@ int validacion(int *pestado)//FUNCION DE VALIDACION
     return *pestado;
 }
 
-void calificar_examen(int *pestado)//FUNCION CALIFICAR EXAMEN
+void calificar_examen(int *pestado, int *pprueba)//FUNCION CALIFICAR EXAMEN
 {
     int verificar;
     verificar=validacion(pestado);
     printf("***** CALIFICAR EXAMEN *****\n");
     if(verificar == 1)
-        {   printf("Examen calificado con exito \n");printf("\nCalificacion: 10/10 \n");
+        {   printf("Examen calificado con exito \n");printf("\nCalificacion: %d",*pprueba);printf("/5\n");
         }else{  printf("***** ERROR *****\n");
                 printf("No se pueden mostrar resultados del examen porque no se ha realizado el examen, por favor vaya al menu y seleccione calificar\n");
              }
@@ -101,20 +105,25 @@ void calificar_examen(int *pestado)//FUNCION CALIFICAR EXAMEN
     printf("\n");
 }
 
-void repetir_examen(char *pnombre,int *pestado)//FUNCION REPETIR EXAMEN
+void repetir_examen(char *pnombre,int *pestado, int *pprueba)//FUNCION REPETIR EXAMEN
 {
     printf("***** REPETIR EXAMEN *****\n");
     printf("\n");
 
-    int estado;
-    estado = validacion(pestado);
-    if(estado == 1)
-        {   *pestado = 0;
-            system("cls");
-    printf("***** REPITIENDO EXAMEN *****\n");
-            realizar_examen(pnombre,pestado);
+    int comprobar;
+    comprobar = validacion(pestado);
+    if(comprobar == 1)
+        {   if (*pprueba <=4)
+                {
+                    *pestado = 0;
+                    system("cls");
+                    *pprueba = rand() % 5;
+                    printf("***** REPITIENDO EXAMEN *****\n");
+                    realizar_examen(pnombre,pestado);
+                }
+
         }else{  printf("***** ERROR *****\n");
-                printf("No se permite volverlo a presentar si no ha presentado el examen, por favor vaya al menu y seleccione Realiar examen\n");
+                printf("No se permite volverlo a presentar si la calificacion es mayor a 4 o no ha presentado el examen, por favor vaya al menu y seleccione Realiar examen\n");
              }
     printf("\n");
 }
